@@ -11,6 +11,7 @@ object WordCounter {
    * @param words 文字列
    * @return 単語がキー、単語数がヴァリューのマップ
    */
-  def countWords(words: List[String]): Map[String, Int] = ???
+  def countWords(words: List[String]): Map[String, Int] =
+    words.flatMap(_.split(" ")).groupBy(identity).map(e => e._1 -> e._2.size)
 
 }

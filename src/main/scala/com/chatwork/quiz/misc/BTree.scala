@@ -48,23 +48,28 @@ sealed trait Node {
 /**
  * 枝を表す[[Node]]。
  *
- * @param left　左の[[Node]]
+ * @param left  左の[[Node]]
  * @param value 値
  * @param right 右の[[Node]]
  */
 case class Branch(left: Node, value: Int, right: Node) extends Node {
 
-  val size: Int = ???
+  lazy val size: Int = 1 + left.size + right.size
 
-  val sum: Int = ???
+  lazy val sum: Int = value + left.sum + right.sum
 
-  val avg: Double = ???
+  lazy val avg: Double = sum / size
 
-  val max: Int = ???
+  lazy val max: Int = right.max
 
-  val min: Int = ???
+  lazy val min: Int = left.min
 
-  def find(value: Int): Option[Node] = ???
+  def find(value: Int): Option[Node] =
+    value match {
+      case n if value == n => Some(this)
+      case n if value > n => left.find(value)
+      case n if value < n => right.find(value)
+    }
 
 }
 
@@ -75,17 +80,13 @@ case class Branch(left: Node, value: Int, right: Node) extends Node {
  */
 case class Leaf(value: Int) extends Node {
 
-  val size: Int = ???
+  lazy val size: Int = 1
 
-  val sum: Int = ???
+  lazy val sum, min, max: Int = value
 
-  val avg: Double = ???
+  val avg: Double = value.toDouble
 
-  val max: Int = ???
-
-  val min: Int = ???
-
-  def find(value: Int): Option[Node] = ???
+  def find(value: Int): Option[Node] = if (value == value) Some(this) else None
 
 }
 
@@ -121,7 +122,19 @@ object BTree {
    * @param values ノードに格納する値の集合
    * @return [[BTree]]
    */
-  def apply(values: List[Int]): BTree = ???
+  def apply(values: List[Int]): BTree = {
+    // あ、末尾再帰じゃない。
+    def loop(acc: List[Int]): Node = {
+      if (acc.size == 1)
+        Leaf(acc.head)
+      else {
+        require(acc.size % 2 == 1)
+        val (left, middle :: right) = acc.splitAt(acc.size / 2)
+        Branch(loop(left), middle, loop(right))
+      }
+    }
+    BTree(loop(values))
+  }
 
 }
 

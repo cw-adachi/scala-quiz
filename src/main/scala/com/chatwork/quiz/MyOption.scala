@@ -1,5 +1,8 @@
 package com.chatwork.quiz
 
+import com.chatwork.quiz.collection.{MyNil, MyList}
+
+
 /**
  * 値が存在する・しないの両状態を表すオブジェクト。いわゆるMaybeモナド。
  *
@@ -11,7 +14,7 @@ sealed trait MyOption[+A] {
    * 格納された値を返す。
    *
    * @return 値
-   * @throws 値が存在しない場合 NoSuchElementException をスローする
+   * @throws NoSuchElementException 値が存在しない場合にスローされる
    */
   def get: A
 
@@ -29,7 +32,8 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい型
    * @return 新しい [[MyOption]]
    */
-  def map[B](f: A => B): MyOption[B] = ???
+  def map[B](f: A => B): MyOption[B] =
+    if (isEmpty) MyNone else MySome(f(get))
 
   /**
    * 値が存在する場合に、値の変換を行う。
@@ -38,7 +42,8 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい型
    * @return 新しい [[MyOption]]
    */
-  def flatMap[B](f: A => MyOption[B]): MyOption[B] = ???
+  def flatMap[B](f: A => MyOption[B]): MyOption[B] =
+    if (isEmpty) MyNone else f(get)
 
   /**
    * 値が存在する場合に、値をフィルタリングする。
@@ -46,7 +51,8 @@ sealed trait MyOption[+A] {
    * @param f フィルターのための述語関数
    * @return 新しい [[MyOption]]
    */
-  def filter(f: A => Boolean): MyOption[A] = ???
+  def filter(f: A => Boolean): MyOption[A] =
+    flatMap(a => if (f(a)) MySome(a) else MyNone)
 
   /**
    * 格納された値を返す。値がない場合は指定された値を返す。
@@ -55,7 +61,8 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい要素型
    * @return 値
    */
-  def getOrElse[B >: A](elseValue: B): B = ???
+  def getOrElse[B >: A](elseValue: B): B =
+    if (isEmpty) elseValue else get
 
   /**
    * 値が存在しない場合に、指定した式を評価し返す。
@@ -64,7 +71,16 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい要素型
    * @return elseValueを評価した値
    */
-  def orElse[B >: A](elseValue: => MyOption[B]): MyOption[B] = ???
+  def orElse[B >: A](elseValue: => MyOption[B]): MyOption[B] =
+    map(MySome(_)).getOrElse(elseValue)
+
+  /**
+   * Listへ変換する。
+   *
+   * @return List[A] リスト
+   */
+  def toList: MyList[A] =
+    if (isEmpty) MyNil else MyList(get)
 
 }
 
@@ -73,9 +89,11 @@ sealed trait MyOption[+A] {
  */
 case object MyNone extends MyOption[Nothing] {
 
-  def get: Nothing = ???
+  def get = throw new NoSuchElementException("None.get")
 
-  def isEmpty: Boolean = ???
+  def isEmpty = true
+
+  def isDefined = false
 
 }
 
@@ -87,9 +105,11 @@ case object MyNone extends MyOption[Nothing] {
  */
 case class MySome[+A](value: A) extends MyOption[A] {
 
-  def get: A = ???
+  def get = value
 
-  def isEmpty: Boolean = ???
+  def isEmpty = false
+
+  def isDefined = true
 
 }
 
@@ -99,12 +119,22 @@ case class MySome[+A](value: A) extends MyOption[A] {
 object MyOption {
 
   /**
+   * Noneを返す。
+   *
+   * @tparam A
+   * @return [[MyNone]]
+   */
+  def empty[A]: MyOption[A] = MyNone
+
+  /**
    * ファクトリメソッド。
    *
    * @param value 値
    * @tparam A 値の型
    * @return [[MyOption]]
    */
-  def apply[A](value: A): MyOption[A] = ???
+  def apply[A](value: A): MyOption[A] =
+    if (value == null) MyNone else MySome(value)
+
 
 }
