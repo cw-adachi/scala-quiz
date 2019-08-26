@@ -54,22 +54,17 @@ sealed trait Node {
  */
 case class Branch(left: Node, value: Int, right: Node) extends Node {
 
-  lazy val size: Int = 1 + left.size + right.size
+  lazy val size: Int = ???
 
-  lazy val sum: Int = value + left.sum + right.sum
+  lazy val sum: Int = ???
 
-  lazy val avg: Double = sum / size
+  lazy val avg: Double = ???
 
-  lazy val max: Int = right.max
+  lazy val max: Int = ???
 
-  lazy val min: Int = left.min
+  lazy val min: Int = ???
 
-  def find(value: Int): Option[Node] =
-    value match {
-      case n if value == n => Some(this)
-      case n if value > n => left.find(value)
-      case n if value < n => right.find(value)
-    }
+  def find(value: Int): Option[Node] = ???
 
 }
 
@@ -80,13 +75,13 @@ case class Branch(left: Node, value: Int, right: Node) extends Node {
  */
 case class Leaf(value: Int) extends Node {
 
-  lazy val size: Int = 1
+  lazy val size: Int = ???
 
-  lazy val sum, min, max: Int = value
+  lazy val sum, min, max: Int = ???
 
-  val avg: Double = value.toDouble
+  val avg: Double = ???
 
-  def find(value: Int): Option[Node] = if (value == value) Some(this) else None
+  def find(value: Int): Option[Node] = ???
 
 }
 
@@ -97,17 +92,17 @@ case class Leaf(value: Int) extends Node {
  */
 case class BTree(node: Node) {
 
-  lazy val size: Int = node.size
+  lazy val size: Int = ???
 
-  lazy val sum: Int = node.sum
+  lazy val sum: Int = ???
 
-  lazy val avg: Double = node.avg
+  lazy val avg: Double = ???
 
-  lazy val max: Int = node.max
+  lazy val max: Int = ???
 
-  lazy val min: Int = node.min
+  lazy val min: Int = ???
 
-  def find(value: Int): Option[Node] = node.find(value)
+  def find(value: Int): Option[Node] = ???
 
 }
 
@@ -122,19 +117,7 @@ object BTree {
    * @param values ノードに格納する値の集合
    * @return [[BTree]]
    */
-  def apply(values: List[Int]): BTree = {
-    // あ、末尾再帰じゃない。
-    def loop(acc: List[Int]): Node = {
-      if (acc.size == 1)
-        Leaf(acc.head)
-      else {
-        require(acc.size % 2 == 1)
-        val (left, middle :: right) = acc.splitAt(acc.size / 2)
-        Branch(loop(left), middle, loop(right))
-      }
-    }
-    BTree(loop(values))
-  }
+  def apply(values: List[Int]): BTree = ???
 
 }
 

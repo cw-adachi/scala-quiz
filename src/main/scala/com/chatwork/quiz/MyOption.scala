@@ -32,8 +32,7 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい型
    * @return 新しい [[MyOption]]
    */
-  def map[B](f: A => B): MyOption[B] =
-    if (isEmpty) MyNone else MySome(f(get))
+  def map[B](f: A => B): MyOption[B] = ???
 
   /**
    * 値が存在する場合に、値の変換を行う。
@@ -42,8 +41,7 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい型
    * @return 新しい [[MyOption]]
    */
-  def flatMap[B](f: A => MyOption[B]): MyOption[B] =
-    if (isEmpty) MyNone else f(get)
+  def flatMap[B](f: A => MyOption[B]): MyOption[B] = ???
 
   /**
    * 値が存在する場合に、値をフィルタリングする。
@@ -51,8 +49,7 @@ sealed trait MyOption[+A] {
    * @param f フィルターのための述語関数
    * @return 新しい [[MyOption]]
    */
-  def filter(f: A => Boolean): MyOption[A] =
-    flatMap(a => if (f(a)) MySome(a) else MyNone)
+  def filter(f: A => Boolean): MyOption[A] = ???
 
   /**
    * 格納された値を返す。値がない場合は指定された値を返す。
@@ -61,8 +58,7 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい要素型
    * @return 値
    */
-  def getOrElse[B >: A](elseValue: B): B =
-    if (isEmpty) elseValue else get
+  def getOrElse[B >: A](elseValue: B): B = ???
 
   /**
    * 値が存在しない場合に、指定した式を評価し返す。
@@ -71,16 +67,14 @@ sealed trait MyOption[+A] {
    * @tparam B 新しい要素型
    * @return elseValueを評価した値
    */
-  def orElse[B >: A](elseValue: => MyOption[B]): MyOption[B] =
-    map(MySome(_)).getOrElse(elseValue)
+  def orElse[B >: A](elseValue: => MyOption[B]): MyOption[B] = ???
 
   /**
    * Listへ変換する。
    *
    * @return List[A] リスト
    */
-  def toList: MyList[A] =
-    if (isEmpty) MyNil else MyList(get)
+  def toList: MyList[A] = ???
 
 }
 
@@ -89,11 +83,11 @@ sealed trait MyOption[+A] {
  */
 case object MyNone extends MyOption[Nothing] {
 
-  def get = throw new NoSuchElementException("None.get")
+  def get = ???
 
-  def isEmpty = true
+  def isEmpty = ???
 
-  def isDefined = false
+  def isDefined = ???
 
 }
 
@@ -124,7 +118,7 @@ object MyOption {
    * @tparam A
    * @return [[MyNone]]
    */
-  def empty[A]: MyOption[A] = MyNone
+  def empty[A]: MyOption[A] = ???
 
   /**
    * ファクトリメソッド。
@@ -133,8 +127,7 @@ object MyOption {
    * @tparam A 値の型
    * @return [[MyOption]]
    */
-  def apply[A](value: A): MyOption[A] =
-    if (value == null) MyNone else MySome(value)
+  def apply[A](value: A): MyOption[A] = ???
 
 
 }
