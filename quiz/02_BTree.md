@@ -1,8 +1,6 @@
-# 二分木データ構造 実装問題
+# Binary tree
 
 以下の前提のもと、下記機能を[テスト](../src/test/scala/com/chatwork/quiz/misc/BTreeSpec.scala)がパスするように実装してください。
-
-<img src="https://dl.dropboxusercontent.com/u/557577/btree.png" alt="diagram" width="50%"/>
 
 - 木にはブランチ(枝)とリーフ(葉)があるものとする。ブランチとリーフをノードとし、以下の型階層を前提とする。型については [こちら](../src/main/scala/com/chatwork/quiz/misc/BTree.scala) を参照してください。
 
